@@ -1,0 +1,87 @@
+{
+  "name": "shell-tool",
+  "displayName": "Shell Language Model Tool",
+  "description": "Guarded shell command execution for VS Code language models.",
+  "version": "0.1.0",
+  "publisher": "ghcxp",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/extension.js",
+  "engines": {
+    "vscode": "^1.95.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onLanguageModelTool:shell"
+  ],
+  "contributes": {
+    "languageModelTools": [
+      {
+        "name": "shell",
+        "toolReferenceName": "shell",
+        "displayName": "Shell",
+        "modelDescription": "Execute shell commands in the user workspace. Always set workdir and request with_escalated_permissions plus a short justification for anything beyond the default sandbox.",
+        "userDescription": "Run guarded shell commands with explicit workdir/approval controls.",
+        "tags": [
+          "shell",
+          "workspace",
+          "terminal"
+        ],
+        "canBeReferencedInPrompt": true,
+        "icon": "$(terminal)",
+        "inputSchema": {
+          "type": "object",
+          "required": [
+            "command"
+          ],
+          "properties": {
+            "command": {
+              "type": "array",
+              "description": "argv vector the model wants to run (e.g. [\"bash\",\"-lc\",\"rg ...\"]).",
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1,
+              "maxItems": 64
+            },
+            "workdir": {
+              "type": "string",
+              "description": "Absolute or workspace-relative directory to run from. Defaults to the first workspace folder when omitted."
+            },
+            "timeout_ms": {
+              "type": "number",
+              "description": "Maximum wall-clock runtime before the command is cancelled (milliseconds).",
+              "minimum": 250,
+              "maximum": 120000
+            },
+            "with_escalated_permissions": {
+              "type": "boolean",
+              "description": "Set true when the command needs elevated access outside the default sandbox."
+            },
+            "justification": {
+              "type": "string",
+              "description": "One-sentence justification required whenever with_escalated_permissions is true.",
+              "maxLength": 140
+            }
+          }
+        }
+      }
+    ]
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "lint": "tsc --noEmit",
+    "test": "echo 'No tests yet'",
+    "watch": "tsc -p tsconfig.json --watch"
+  },
+  "dependencies": {
+    "zod": "^4.1.12"
+  },
+  "devDependencies": {
+    "@types/node": "^20.16.11",
+    "@types/vscode": "^1.95.0",
+    "typescript": "^5.6.2"
+  }
+}

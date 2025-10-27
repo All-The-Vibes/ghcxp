@@ -1,0 +1,11 @@
+# workspace dependencies
+node_modules/
+
+# turbo build cache
+.turbo/
+
+# compiled extension output
+apps/**/dist/
+
+# pnpm diagnostics
+pnpm-debug.log*
