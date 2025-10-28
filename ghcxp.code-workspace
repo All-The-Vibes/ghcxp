@@ -1,0 +1,51 @@
+{
+  "folders": [
+    {
+      "path": "."
+    },
+    {
+      "path": "apps/codex-tools"
+    }
+  ],
+  "settings": {
+    "chat.agent.maxRequests": 400,
+    "chat.agent.thinkingStyle": "collapsed",
+    "chat.checkpoints.enabled": false,
+    "chat.implicitContext.enabled": {
+      "panel": "never"
+    },
+    "chat.implicitContext.suggestedContext": false,
+    "chat.sendElementsToChat.attachCSS": false,
+    "chat.sendElementsToChat.attachImages": false,
+    "chat.sendElementsToChat.enabled": false,
+    "chat.todoListTool.descriptionField": false,
+    "chat.tools.terminal.enableAutoApprove": false,
+    "chat.tools.terminal.outputLocation": "terminal",
+    "chat.useNestedAgentsMdFiles": true,
+    "inlineChat.enableV2": true,
+    "github.copilot.chat.agent.currentEditorContext.enabled": false,
+    "github.copilot.chat.anthropic.thinking.enabled": true,
+    "github.copilot.chat.azureModels": {
+      "gpt-5-codex": {
+        "maxInputTokens": 272000,
+        "maxOutputTokens": 128000,
+        "name": "AZ-GPT-5-Codex",
+        "thinking": true,
+        "toolCalling": true,
+        "url": "...",
+        "vision": true
+      }
+    },
+    "github.copilot.chat.codeGeneration.useInstructionFiles": false,
+    "github.copilot.chat.codesearch.enabled": true,
+    "github.copilot.chat.edits.suggestRelatedFilesForTests": false,
+    "github.copilot.chat.edits.suggestRelatedFilesFromGitHistory": false,
+    "github.copilot.chat.newWorkspace.useContext7": false,
+    "github.copilot.chat.notebook.enhancedNextEditSuggestions.enabled": false,
+    "github.copilot.chat.notebook.followCellExecution.enabled": true,
+    "github.copilot.chat.responsesApiReasoningEffort": "high",
+    "github.copilot.chat.responsesApiReasoningSummary": "detailed",
+    "github.copilot.chat.reviewAgent.enabled": false,
+    "github.copilot.chat.reviewSelection.enabled": false
+  }
+}

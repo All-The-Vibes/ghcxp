@@ -1,15 +1,29 @@
 {
   "$schema": "https://turbo.build/schema.json",
-  "globalEnv": [
-    "VSCODE_CWD"
-  ],
+  "globalEnv": ["VSCODE_CWD"],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
+      "inputs": ["$TURBO_DEFAULT$", ".env*"],
       "outputs": ["dist/**"]
     },
     "lint": {
       "dependsOn": ["^lint"]
+    },
+    "check-types": {
+      "dependsOn": ["^check-types"]
+    },
+    "vsce:package": {
+      "inputs": ["$TURBO_DEFAULT$", ".env*"],
+      "dependsOn": ["dist/**"]
+    },
+    "vsce:publish": {
+      "inputs": ["$TURBO_DEFAULT$", ".env*"],
+      "dependsOn": ["dist/**"]
+    },
+    "ovsx:publish": {
+      "inputs": ["$TURBO_DEFAULT$", ".env*"],
+      "dependsOn": ["*.vsix"]
     },
     "test": {
       "dependsOn": ["build", "^test"]

@@ -9,3 +9,5 @@ apps/**/dist/
 
 # pnpm diagnostics
 pnpm-debug.log*
+
+.DS_Store

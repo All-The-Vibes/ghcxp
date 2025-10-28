@@ -1,0 +1,193 @@
+{
+  "name": "codex-tools",
+  "displayName": "Codex Tools",
+  "description": "Codex-style shell, apply_patch, and update_plan tools for VS Code language models.",
+  "version": "0.3.0",
+  "publisher": "ghcxp",
+  "license": "UNLICENSED",
+  "type": "commonjs",
+  "main": "./dist/extension.js",
+  "engines": {
+    "vscode": "^1.98.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onLanguageModelTool:shell",
+    "onLanguageModelTool:apply_patch",
+    "onLanguageModelTool:update_plan"
+  ],
+  "contributes": {
+    "languageModelTools": [
+      {
+        "name": "apply_patch",
+        "toolReferenceName": "apply_patch",
+        "displayName": "Codex Apply Patch",
+        "modelDescription": "Apply a file-oriented diff enclosed by `*** Begin Patch` … `*** End Patch`. Each section begins with `*** Add File:`, `*** Update File:` (optionally `*** Move to:`), or `*** Delete File:`. Update sections use `@@` context with lines prefixed by `+`, `-`, or space.",
+        "userDescription": "Apply a Codex-formatted patch to workspace files atomically.",
+        "tags": [
+          "patch",
+          "workspace",
+          "edit"
+        ],
+        "canBeReferencedInPrompt": true,
+        "icon": "$(diff)",
+        "inputSchema": {
+          "type": "object",
+          "required": [
+            "patch"
+          ],
+          "properties": {
+            "patch": {
+              "type": "string",
+              "description": "Full Codex patch text including the envelope markers `*** Begin Patch` and `*** End Patch`."
+            },
+            "workdir": {
+              "type": "string",
+              "description": "Absolute or workspace-relative directory used as the patch root. Defaults to the first workspace folder when omitted."
+            },
+            "timeout_ms": {
+              "type": "number",
+              "description": "Maximum wall-clock runtime before the patch application is cancelled (milliseconds).",
+              "minimum": 250,
+              "maximum": 120000
+            }
+          }
+        }
+      },
+      {
+        "name": "update_plan",
+        "toolReferenceName": "update_plan",
+        "displayName": "Codex Update Plan",
+        "modelDescription": "Maintain a short task plan (≤ 8 steps). Provide steps as { step, status: pending | in_progress | completed }. Skip trivial tasks.",
+        "userDescription": "Update PLAN.md and sync with the native Copilot Chat TODO tool when available.",
+        "tags": [
+          "plan",
+          "todo",
+          "workflow"
+        ],
+        "canBeReferencedInPrompt": true,
+        "icon": "$(checklist)",
+        "inputSchema": {
+          "type": "object",
+          "required": [
+            "plan"
+          ],
+          "properties": {
+            "plan": {
+              "type": "array",
+              "description": "Array of steps with status (pending | in_progress | completed). Keep it short and focused.",
+              "items": {
+                "type": "object",
+                "required": [
+                  "step",
+                  "status"
+                ],
+                "properties": {
+                  "step": {
+                    "type": "string",
+                    "description": "Short description of the step."
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "pending",
+                      "in_progress",
+                      "completed"
+                    ]
+                  }
+                }
+              },
+              "minItems": 2,
+              "maxItems": 8
+            },
+            "explanation": {
+              "type": "string",
+              "description": "Optional one- or two-sentence context for the plan."
+            }
+          }
+        }
+      },
+      {
+        "name": "shell",
+        "toolReferenceName": "shell",
+        "displayName": "Codex Shell",
+        "modelDescription": "Execute shell commands in the user's environment. Always set `workdir`. Use narrow, explicit commands. Also supports Codex-style file edits by intercepting `apply_patch <<'PATCH' … PATCH` heredocs in bash/sh/zsh scripts.",
+        "userDescription": "Run a shell command from a chosen working directory; output streams to the integrated terminal. Codex-style apply_patch heredocs are applied directly.",
+        "tags": [
+          "shell",
+          "workspace",
+          "terminal"
+        ],
+        "canBeReferencedInPrompt": true,
+        "icon": "$(terminal)",
+        "inputSchema": {
+          "type": "object",
+          "required": [
+            "command"
+          ],
+          "properties": {
+            "command": {
+              "type": "array",
+              "description": "argv vector the model wants to run (e.g. [\"bash\",\"-lc\",\"rg -n pattern src\"]).",
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1,
+              "maxItems": 64
+            },
+            "workdir": {
+              "type": "string",
+              "description": "Absolute or workspace-relative directory to run from. Defaults to the first workspace folder when omitted."
+            },
+            "timeout_ms": {
+              "type": "number",
+              "description": "Maximum wall-clock runtime before the command is cancelled (milliseconds).",
+              "minimum": 250,
+              "maximum": 120000
+            },
+            "with_escalated_permissions": {
+              "type": "boolean",
+              "description": "Compatibility field used in Codex prompts. GHCP/VS Code manage approvals natively."
+            },
+            "justification": {
+              "type": "string",
+              "description": "Short reason when escalation is requested (≤ 140 chars)."
+            }
+          }
+        }
+      }
+    ]
+  },
+  "scripts": {
+    "lint": "biome check",
+    "lint:fix": "biome check --write",
+    "format": "biome format --write",
+    "build": "pnpm run check-types && pnpm run lint && tsup",
+    "check-types": "tsc --noEmit",
+    "watch:build": "tsup --watch",
+    "watch:types": "tsc --noEmit --watch",
+    "dev": "concurrently \"pnpm run watch:build\" \"pnpm run watch:types\"",
+    "prevsce:publish": "pnpm run check-types && pnpm run lint && pnpm run build",
+    "vsce:publish": "dotenv -- pnpm vsce publish --no-dependencies",
+    "prevsce:package": "pnpm run prevsce:publish",
+    "vsce:package": "pnpm vsce package --no-dependencies",
+    "preovsx:publish": "pnpm run prevsce:publish && pnpm run vsce:package",
+    "ovsx:publish": "dotenv -- pnpm ovsx publish *.vsix"
+  },
+  "dependencies": {
+    "zod": "^4.1.12"
+  },
+  "devDependencies": {
+    "@types/node": "^20.16.11",
+    "@types/vscode": "^1.95.0",
+    "biome": "^0.3.3",
+    "concurrently": "^9.2.1",
+    "esbuild": "^0.25.11",
+    "eslint": "^9.38.0",
+    "prettier": "^3.6.2",
+    "tsup": "^8.5.0",
+    "typescript": "^5.6.2"
+  }
+}
