@@ -1,1 +1,0 @@
-This file exists so we can verify Codex-style edits work end-to-end.
