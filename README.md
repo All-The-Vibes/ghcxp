@@ -60,7 +60,7 @@ Once saved, **Codex** will appear in the Agent dropdown alongside the built-in m
 
 ### Why not rely on `github.copilot.chat.gpt5AlternatePrompt`
 
-- Copilot Chat decides when to use the alternate prompt by checking the model *family* ("gpt-5", "gpt-4.1", etc.), not the exact model name.
+- Copilot Chat decides when to use the alternate prompt by checking the model _family_ ("gpt-5", "gpt-4.1", etc.), not the exact model name.
 - `gpt-5-codex` is not tagged as the "gpt-5" family in the extension, so the `gpt5AlternatePrompt` setting is skipped.
 - Copilot currently exposes no `...gpt5CodexAlternatePrompt` override, and automated tests only cover the default, 4.1, and gpt-5 branches.
 - A custom chat mode is therefore the supported path to bind both the preferred `gpt-5-codex` model and the Codex system prompt.
@@ -208,3 +208,11 @@ Pair Codex Mode with your preferred UI instructions. A lightweight option is to 
 - **Verbose replies** → verify reasoning effort is minimal/low and custom instructions remain short and system‑scoped.
 
 ---
+
+## Update: VS Code `apply_patch` alignment (November 2025)
+
+Recent Copilot insider builds now remap the **Built-In** -> **Edit** -> **editFiles** tool capability to the canonical `apply_patch` tool name that is sent to the agent. They've decided to normalize names so that the model always sees a single Codex-style `apply_patch` entry. `gpt‑5‑codex` is the only foundation model with fine-tuning around tool use and patch formatting, so VS Code is aligning their built-in editor with Codex’s envelope/grammar instead of exposing a competing edit tool.
+
+Practically speaking:
+
+This is great news. If you are working inside VS Code, just enable the built-in **Edit files** tool and rely on it for patching (since it now follows codex patching conventions) over our custom `apply_patch` tool.
